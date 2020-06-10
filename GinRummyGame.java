@@ -197,9 +197,9 @@ public class GinRummyGame {
 
 				// get opponent meld
 				ArrayList<ArrayList<Card>> opponentMelds = players[opponent].getFinalMelds();
+				meldsCopy = new ArrayList<ArrayList<Card>>();
 				for (ArrayList<Card> meld : opponentMelds)
 					meldsCopy.add((ArrayList<Card>) meld.clone());
-				meldsCopy = new ArrayList<ArrayList<Card>>();
 				for (int i = 0; i < 2; i++) 
 					players[i].reportFinalMelds(opponent, meldsCopy);
 				
