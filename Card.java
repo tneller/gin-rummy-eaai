@@ -139,8 +139,8 @@ public class Card {
 	}
 
 	/**
-	 * Return a Stack deck of Cards corresponding to the give Microsoft FreeCell seed number
-	 * @param seed Microsoft FreeCell seed number
+	 * Return a Stack deck of Cards corresponding to the given shuffle seed number
+	 * @param seed shuffle seed number
 	 * @return corresponding Stack deck of Cards
 	 */
 	public static Stack<Card> getShuffle(int seed) {
@@ -215,7 +215,7 @@ public class Card {
 	}
 	
 	/**
-	 * A test to show Microsoft shuffle 617.  Output is consistent with data at http://freecellgamesolutions.com/
+	 * A test to show shuffle seed 617.
 	 * @param args (not used)
 	 */
 	public static void main(String[] args) {
