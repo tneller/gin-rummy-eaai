@@ -114,7 +114,7 @@ public class Card {
 	 * @param id Card id number (0 - 51)
 	 * @return corresponding Card object
 	 */
-	static Card getCard(int id) {
+	public static Card getCard(int id) {
 		return allCards[id];
 	}
 	
@@ -124,7 +124,7 @@ public class Card {
 	 * @param suit suit index
 	 * @return corresponding Card object
 	 */
-	static Card getCard(int rank, int suit) {
+	public static Card getCard(int rank, int suit) {
 		return allCards[suit * NUM_RANKS + rank];
 	}
 	
@@ -134,7 +134,7 @@ public class Card {
 	 * @param suit suit index
 	 * @return corresponding Card id number
 	 */
-	static int getId(int rank, int suit) {
+	public static int getId(int rank, int suit) {
 		return suit * NUM_RANKS + rank;
 	}
 
@@ -143,7 +143,7 @@ public class Card {
 	 * @param seed Microsoft FreeCell seed number
 	 * @return corresponding Stack deck of Cards
 	 */
-	static public Stack<Card> getShuffle(int seed) {
+	public static Stack<Card> getShuffle(int seed) {
 		Stack<Card> deck = new Stack<Card>();
 		for (int i = 0; i < NUM_CARDS; i++)
 			deck.push(Card.allCards[i]);
