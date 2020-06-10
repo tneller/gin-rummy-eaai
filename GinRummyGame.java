@@ -280,6 +280,11 @@ public class GinRummyGame {
 				if (playVerbose)
 					System.out.println("The draw pile was reduced to two cards without knocking, so the hand is cancelled.");
 			}
+			
+			// report final hands
+			for (int i = 0; i < 2; i++)
+				for (int j = 0; j < 2; j++)
+					players[i].reportFinalHand(j, (ArrayList<Card>) hands.get(j).clone());
 
 			// score reporting
 			if (playVerbose) 
