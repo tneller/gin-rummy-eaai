@@ -147,7 +147,7 @@ public class Card {
 		Stack<Card> deck = new Stack<Card>();
 		for (int i = 0; i < NUM_CARDS; i++)
 			deck.push(Card.allCards[i]);
-		Collections.shuffle(deck);
+		Collections.shuffle(deck, new java.util.Random(seed));
 		return deck;
 	}
 
