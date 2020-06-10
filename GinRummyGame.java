@@ -110,7 +110,7 @@ public class GinRummyGame {
 				boolean drawFaceUp = false;
 				Card faceUpCard = discards.peek();
 				// offer draw face-up iff not 3rd turn with first face up card (decline automatically in that case) 
-				if (!(turnsTaken == 3 && faceUpCard == firstFaceUpCard)) { // both players declined and 1st player must draw face down
+				if (!(turnsTaken == 2 && faceUpCard == firstFaceUpCard)) { // both players declined and 1st player must draw face down
 					drawFaceUp = players[currentPlayer].willDrawFaceUpCard(faceUpCard);
 					if (playVerbose && !drawFaceUp && faceUpCard == firstFaceUpCard && turnsTaken < 2)
 						System.out.printf("Player %d declines %s.\n", currentPlayer, firstFaceUpCard);
@@ -241,6 +241,8 @@ public class GinRummyGame {
 							if (layOffCard != null) {
 								if (playVerbose)
 									System.out.printf("Player %d lays off %s on %s.\n", opponent, layOffCard, layOffMeld);
+								for (int i = 0; i < 2; i++) 
+									players[i].reportLayoff(opponent, layOffCard, (ArrayList<Card>) layOffMeld.clone());
 								unmeldedCards.remove(layOffCard);
 								layOffMeld.add(layOffCard);
 								cardWasLaidOff = true;
