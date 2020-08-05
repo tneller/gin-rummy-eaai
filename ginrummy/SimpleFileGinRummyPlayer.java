@@ -1,13 +1,12 @@
 package ginrummy;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.nio.file.StandardOpenOption;
+import java.util.Scanner;
+import static java.nio.file.StandardOpenOption.*;
+
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Scanner;
 
 
 /**
@@ -49,6 +48,7 @@ public class SimpleFileGinRummyPlayer implements GinRummyPlayer {
 	Card faceUpCard, drawnCard;
 	ArrayList<Long> drawDiscardBitstrings = new ArrayList<Long>();
 
+	GinRummyUtil.FileResource file = new GinRummyUtil.FileResource(SimpleFileGinRummyPlayer.class, "stats.dat");
 	int turns = 0;
 
 	@Override
@@ -63,13 +63,13 @@ public class SimpleFileGinRummyPlayer implements GinRummyPlayer {
 
 		if(turns <= 0) {
 			// on the first hand, read stats file (if it exists) and report
-			if(!GinRummyUtil.checkResourceExists(SimpleFileGinRummyPlayer.class, "stats.dat")) {
+			if(!file.exists()) {
 				System.out.println("No existing stats file. Skipping report!");
 			}
 			else {
 				System.out.println("Found stats file. Reporting average hand length (in turns).");
 				try {
-					Scanner scan = new Scanner(GinRummyUtil.getResourceAsInputStream(SimpleFileGinRummyPlayer.class, "stats.dat"));
+					Scanner scan = new Scanner(file.asInputStream());
 					int sum = 0;
 					int num = 0;
 					while(scan.hasNextLine()) {
@@ -178,7 +178,7 @@ public class SimpleFileGinRummyPlayer implements GinRummyPlayer {
 
 		// record the number of turns
 		try {
-			PrintWriter pw = new PrintWriter(GinRummyUtil.getResourceAsOutputStream(SimpleFileGinRummyPlayer.class, "stats.dat", StandardOpenOption.CREATE, StandardOpenOption.APPEND));
+			PrintWriter pw = new PrintWriter(file.asOutputStream(CREATE, APPEND));
 			pw.printf("%d%n", turns);
 			pw.close();
 		}

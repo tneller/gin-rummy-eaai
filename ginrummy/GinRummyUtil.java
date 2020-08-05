@@ -4,6 +4,7 @@ package ginrummy;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -320,31 +321,65 @@ public class GinRummyUtil {
 	}
 
 	/**
-	 *
+	 * Represents a class resource which is rooted at the directory associated
+	 * with a specific class loader.
 	 */
-	public static boolean checkResourceExists(Class cls, String name) {
-		Path source = Paths.get(cls.getResource("/").getPath());
-		Path path = Paths.get(String.format("%s/%s", source.toAbsolutePath(), name));
-		return Files.exists(path);
-	}
+	public static class FileResource {
+		private final Path path;
 
-	/**
-	 *
-	 */
-	public static InputStream getResourceAsInputStream(Class cls, String name, OpenOption... options) throws IOException {
-		Path source = Paths.get(cls.getResource("/").getPath());
-		Path path = Paths.get(String.format("%s/%s", source.toAbsolutePath(), name));
-		System.out.println(path);
-		return Files.newInputStream(path, options);
-	}
+		/**
+		 * Generate a path resource which is rooted at the directory associated
+		 * with the specified class' class loader with the specified file name.
+		 * That name may specify any relative path (using unix conventions); the
+		 * file handing code will convert the generated paths to the correct
+		 * syntax for the target system.
+		 *
+		 * @param cls the class from which to obtain the class loader directory
+		 * @param name a file specification relative to the class loader
+		 */
+		public FileResource(Class cls, String name) {
+			try {
+				this.path = Paths.get(cls.getResource("/").toURI()).resolve(name);
+			}
+			catch(URISyntaxException exception) {
+				/* I can not imagine a situation wherein the URL provided by
+				 * the core java method Class<>.getResource(String) would not
+				 * be strictly compliant with the URL syntax specification of
+				 * RFC2396. Therefore we circumvent the checked exception
+				 * URISyntaxException and replace it with an error condition.
+				 */
+				throw new Error("For some reason the class loader's URL is not formatted strictly according to to RFC2396 and cannot be converted to a URI", exception);
+			}
+		}
 
-	/**
-	 *
-	 */
-	public static OutputStream getResourceAsOutputStream(Class cls, String name, OpenOption... options) throws IOException {
-		Path source = Paths.get(cls.getResource("/").getPath());
-		Path path = Paths.get(String.format("%s/%s", source.toAbsolutePath(), name));
-		return Files.newOutputStream(path, options);
+		/**
+		 * Query the existance of this file resource.
+		 */
+		 public boolean exists() {
+			 return Files.exists(this.path);
+		 }
+
+		/**
+		 * Open a new InputStream to the resource. This input stream can be
+		 * used in other file parsing classes such as Scanner to facilitate
+		 * file reading.
+		 *
+		 * @param options options for opening the file (see StandardOpenOption)
+		 */
+		public InputStream asInputStream(OpenOption... options) throws IOException {
+			return Files.newInputStream(this.path, options);
+		}
+
+		/**
+		 * Open a new OutputStream to the resource. This output stream can be
+		 * used in other file parsing classes such as PrintWriter to facilitate
+		 * file writing.
+		 *
+		 * @param options options for opening the file (see StandardOpenOption)
+		 */
+		public OutputStream asOutputStream(OpenOption... options) throws IOException {
+			return Files.newOutputStream(this.path, options);
+		}
 	}
 
 	/**
